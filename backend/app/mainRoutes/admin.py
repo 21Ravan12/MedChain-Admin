@@ -28,7 +28,7 @@ csrf = CSRFProtect()
 
 auth_ad = Blueprint('admin', __name__)
 
-DEFAULT_LIMITS = "20 per minute; 500 per day"
+DEFAULT_LIMITS = "20 per minute; 1000 per day"
 
 @auth_ad.route('/profile', methods=['GET'])
 @limiter.limit(DEFAULT_LIMITS, key_func=rate_limit_key)
@@ -1016,7 +1016,7 @@ def unverified_pharmacy_admin():
                 'admin_id': decrypt_data(pharmacy_admin.admin_id_encrypted) if pharmacy_admin.admin_id_encrypted else None,
                 'documents': [
                     {
-                        'pharmacist_cert': decrypt_data(pharmacy_admin.pharmacist_cert_encrypted) if pharmacy_admin.pharmacist_cert_encrypted else None,
+                        'license': decrypt_data(pharmacy_admin.pharmacist_cert_encrypted) if pharmacy_admin.pharmacist_cert_encrypted else None,
                     }
                 ],
             }
@@ -1271,7 +1271,7 @@ def unverified_doctor():
                     'role': user.role,
                     'hospital_id': doctor.hospital_id,
                     'license_number': decrypt_data(doctor.license_number_encrypted) if doctor.license_number_encrypted else None,
-                    'submission_date': doctor.submission_date_encrypted,
+                    'submission_date': decrypt_data(doctor.submission_date_encrypted),
                     'degree': decrypt_data(doctor.degree_encrypted) if doctor.degree_encrypted else None,
                     'profile_image': decrypt_data(doctor.profile_image_encrypted) if doctor.profile_image_encrypted else None,
                     'documents': [
