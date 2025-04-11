@@ -1,160 +1,210 @@
-# MedChain Backend
+# MedChain Frontend
 
-The MedChain backend is a Flask-based application designed to handle user authentication, role-based access control, and secure data management for a healthcare platform. It provides APIs for user registration, login, role selection, and other administrative functionalities.
+The MedChain frontend is a Vue.js-based application designed to provide an intuitive and responsive user interface for the MedChain healthcare platform. It includes role-based dashboards, user management, and administrative tools for managing verifications, complaints, and blockchain health.
 
 ## Features
 
-- **User Authentication**: Secure user registration, login, logout, and password reset functionalities.
-- **Role-Based Access Control**: Supports multiple roles such as `patient`, `doctor`, `hospitalAdmin`, `pharmacyAdmin`, and `admin`.
-- **Data Encryption**: Sensitive data is encrypted before being stored in the database.
-- **Rate Limiting**: Protects endpoints from abuse using Flask-Limiter.
-- **CSRF Protection**: Ensures secure requests with CSRF tokens.
-- **Audit Logging**: Tracks critical events like login attempts, registration, and role changes.
-- **Redis Integration**: Manages temporary session data and rate-limiting keys.
-- **Email Notifications**: Sends verification codes and notifications via email.
-- **Multi-Factor Authentication (MFA)**: Optional MFA for enhanced security.
-- **Admin Dashboard**: Provides endpoints for managing users, roles, and verification statuses.
+- **Role-Based Dashboards**: Separate dashboards for `admin`, `doctor`, `patient`, `hospitalAdmin`, `pharmacyAdmin`, and other roles.
+- **Verification Management**: Admins can view and manage pending verifications for doctors, hospitals, pharmacies, and patients.
+- **Activity Feed**: Displays recent activities for admins to monitor platform events.
+- **Responsive Design**: Fully responsive UI optimized for desktop, tablet, and mobile devices.
+- **Dynamic Data Fetching**: Real-time updates for dashboard statistics and verification queues.
+- **Error Handling**: Graceful error handling with retry options for failed API calls.
+- **State Management**: Centralized state management using Vuex for seamless data flow across components.
+- **Reusable Components**: Modular and reusable components for cards, tables, and forms.
+- **Theming**: Consistent design with a clean and modern theme.
 
 ## Project Structure
 
 ```
-backend/
-├── app/
-│   ├── __init__.py
-│   ├── config.py
-│   ├── models.py
-│   ├── routes/
-│   │   ├── __init__.py
-│   │   ├── auth.py
-│   │   ├── admin.py
+frontend/
+├── public/
+│   ├── index.html
+│   └── favicon.ico
+├── src/
+│   ├── assets/
+│   │   ├── images/
+│   │   └── styles/
+│   ├── components/
+│   │   ├── admin/
+│   │   │   ├── dashboard/
+│   │   │   │   ├── AdminDashboard.vue
+│   │   │   │   ├── components/
+│   │   │   │   │   ├── AdminNavbar.vue
+│   │   │   │   │   ├── AdminSidebar.vue
+│   │   │   │   │   ├── DashboardCard.vue
+│   │   │   │   │   ├── ActivityFeed.vue
+│   │   │   │   │   └── VerificationQueue.vue
+│   │   │   └── ...
+│   │   ├── shared/
+│   │   │   ├── Button.vue
+│   │   │   ├── Modal.vue
+│   │   │   └── ...
+│   ├── router/
+│   │   ├── index.js
+│   │   └── routes/
+│   │       ├── adminRoutes.js
+│   │       ├── userRoutes.js
+│   │       └── ...
+│   ├── store/
+│   │   ├── index.js
+│   │   ├── modules/
+│   │   │   ├── admin.js
+│   │   │   ├── user.js
+│   │   │   └── ...
+│   ├── views/
+│   │   ├── AdminView.vue
+│   │   ├── LoginView.vue
+│   │   ├── RegisterView.vue
 │   │   └── ...
-│   ├── security.py
-│   ├── utils.py
+│   ├── App.vue
+│   ├── main.js
 │   └── ...
-├── run.py
-└── requirements.txt
+├── package.json
+└── README.md
 ```
 
-### Key Files
+### Key Directories
 
-- **`auth.py`**: Handles user authentication, registration, role selection, and MFA.
-- **`admin.py`**: Provides administrative endpoints for managing users, roles, and verification statuses.
-- **`models.py`**: Defines database models for users, roles, and audit logs.
-- **`security.py`**: Contains encryption, decryption, and security-related utilities.
-- **`utils.py`**: Includes helper functions for email sending, token generation, and rate-limiting keys.
-- **`config.py`**: Centralized configuration for the application, including database and email settings.
+- **`components/`**: Contains reusable Vue components, including admin-specific components like `AdminDashboard.vue` and shared components like `Button.vue` and `Modal.vue`.
+- **`router/`**: Defines application routes and role-based navigation guards.
+- **`store/`**: Vuex store for managing global state, including modules for admin and user-specific data.
+- **`views/`**: High-level views corresponding to application pages, such as login, registration, and admin dashboard.
+- **`assets/`**: Static assets like images and global styles.
 
-## API Endpoints
+## Key Components
 
-### Authentication (`auth.py`)
+### Admin Dashboard (`AdminDashboard.vue`)
 
+The admin dashboard is the central hub for managing the platform. It includes:
+
+- **Summary Cards**: Displays key statistics like pending verifications, unresolved complaints, total users, and blockchain health.
+- **Recent Activity**: Shows a feed of recent actions performed on the platform.
+- **Verification Queue**: Lists pending verifications for doctors, hospitals, pharmacies, and patients.
+- **Sidebar Navigation**: Collapsible sidebar for navigating between admin-specific pages.
+- **Navbar**: Displays the admin's name and provides quick access to settings and logout.
+
+### Shared Components
+
+- **`Button.vue`**: A customizable button component with support for different styles and sizes.
+- **`Modal.vue`**: A reusable modal dialog for displaying forms, confirmations, and alerts.
+
+## State Management
+
+The application uses Vuex for centralized state management. Key modules include:
+
+- **`admin.js`**: Manages admin-specific data, such as dashboard statistics, recent activities, and verification queues.
+- **`user.js`**: Handles user authentication, profile data, and role-based permissions.
+
+### Example Vuex Actions
+
+- **`fetchDashboardStats`**: Fetches dashboard statistics for the admin.
+- **`fetchVerificationQueue`**: Retrieves pending verifications for doctors, hospitals, pharmacies, and patients.
+
+## API Integration
+
+The frontend communicates with the backend via RESTful APIs. Key API endpoints include:
+
+- **`GET /api/admin/dashboard-stats`**: Fetches statistics for the admin dashboard.
+- **`GET /api/admin/unverified-doctor`**: Retrieves unverified doctors for verification.
+- **`GET /api/admin/unverified-patient`**: Retrieves unverified patients for verification.
+- **`GET /api/admin/unverified-pharmacist`**: Retrieves unverified pharmacists for verification.
+- **`POST /api/auth/login`**: Authenticates a user and retrieves a JWT token.
 - **`POST /api/auth/register`**: Registers a new user.
-- **`POST /api/auth/login`**: Logs in a user and issues JWT tokens.
-- **`POST /api/auth/logout`**: Logs out a user and invalidates their session.
-- **`POST /api/auth/select-role`**: Assigns a role to a user during registration.
-- **`POST /api/auth/resend-verification-code`**: Resends a verification code to the user.
-- **`POST /api/auth/complete-registration`**: Completes the registration process after verification.
-- **`POST /api/auth/request-password-reset`**: Initiates a password reset process.
-- **`POST /api/auth/verify-reset-code`**: Verifies a password reset code.
-- **`POST /api/auth/reset-password`**: Resets the user's password.
-- **`POST /api/auth/enable-mfa`**: Enables multi-factor authentication for a user.
-- **`POST /api/auth/disable-mfa`**: Disables multi-factor authentication for a user.
-- **`POST /api/auth/verify-mfa`**: Verifies an MFA code.
 
-### Administration (`admin.py`)
+## Styling
 
-The `admin.py` file provides endpoints for managing users, roles, and verification statuses. These endpoints are restricted to users with the `admin` role.
+The application uses scoped CSS for component-specific styles and global styles for shared elements. Key design principles include:
 
-#### Admin Profile and Dashboard
+- **Consistency**: Uniform spacing, colors, and typography across components.
+- **Responsiveness**: Media queries for adapting layouts to different screen sizes.
+- **Accessibility**: ARIA attributes and keyboard navigation support.
 
-- **`GET /api/admin/profile`**: Retrieves the profile of the currently logged-in admin.
-- **`GET /api/admin/dashboard-stats`**: Retrieves statistics for the admin dashboard, including counts of verified and unverified entities.
+### Example Styles
 
-#### User Management
+```css
+.admin-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8faf7;
+}
 
-- **`GET /api/admin/users`**: Fetches all users with their roles and statuses.
-- **`POST /api/admin/approve`**: Approves a user or entity.
-- **`POST /api/admin/reject`**: Rejects a user or entity.
+.dashboard-header h1 {
+  color: #2d6a4f;
+  font-size: 2rem;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
 
-#### Verification Management
+.view-all {
+  color: #40916c;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
 
-- **`GET /api/admin/unverified-hospital`**: Fetches unverified hospitals.
-- **`GET /api/admin/unverified-doctor`**: Fetches unverified doctors.
-- **`GET /api/admin/unverified-patient`**: Fetches unverified patients.
-- **`GET /api/admin/unverified-pharmacy`**: Fetches unverified pharmacies.
-- **`GET /api/admin/unverified-pharmacist`**: Fetches unverified pharmacists.
-- **`GET /api/admin/unverified-admins`**: Fetches unverified admins.
-- **`GET /api/admin/unverified-hospital-admin`**: Fetches unverified hospital admins.
-- **`GET /api/admin/unverified-pharmacy-admins`**: Fetches unverified pharmacy admins.
-- **`GET /api/admin/verified-hospital`**: Fetches verified hospitals.
-- **`GET /api/admin/verified-pharmacy`**: Fetches verified pharmacies.
-
-### Key Features in `admin.py`
-
-- **Pagination**: All endpoints support pagination using `page` and `per_page` query parameters.
-- **Data Decryption**: Sensitive fields like names, emails, and phone numbers are decrypted before being returned in the response.
-- **CSRF Protection**: CSRF tokens are generated and included in responses for secure admin actions.
-- **Dynamic Role Management**: Supports multiple roles and dynamically fetches data based on the role.
-- **Error Handling**: Comprehensive error handling with detailed logging for debugging.
-
-## Security Features
-
-- **Encryption**: All sensitive fields (e.g., email, phone, passwords) are encrypted using `encrypt_data` and `decrypt_data` functions.
-- **CSRF Protection**: Ensures secure requests using CSRF tokens.
-- **Rate Limiting**: Prevents abuse of endpoints with configurable limits.
-- **Audit Logs**: Tracks critical events asynchronously using the `AuditLog` model.
+.view-all:hover {
+  color: #2d6a4f;
+  text-decoration: underline;
+}
+```
 
 ## Setup Instructions
 
 ### Prerequisites
 
-- Python 3.10+
-- Redis
-- PostgreSQL (or any SQLAlchemy-compatible database)
+- Node.js 16+
+- Vue CLI
 
 ### Installation
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo/medchain-backend.git
-   cd medchain-backend
+   git clone https://github.com/your-repo/medchain-frontend.git
+   cd medchain-frontend
    ```
 
 2. Install dependencies:
    ```sh
-   pip install -r requirements.txt
+   npm install
    ```
 
 3. Configure environment variables in a `.env` file:
    ```
-   DATABASE_URL=postgresql://user:password@localhost/medchain
-   JWT_SECRET_KEY=your_jwt_secret
-   MAIL_SERVER=smtp.gmail.com
-   MAIL_PORT=587
-   MAIL_USERNAME=your_email@gmail.com
-   MAIL_PASSWORD=your_email_password
+   VUE_APP_API_BASE_URL=http://localhost:5000/api
    ```
 
-4. Initialize the database:
+4. Run the development server:
    ```sh
-   flask db upgrade
+   npm run serve
    ```
 
-5. Run the application:
+5. Build for production:
    ```sh
-   flask run
+   npm run build
    ```
 
 ## Testing
 
 - Run unit tests:
   ```sh
-  pytest
+  npm run test:unit
   ```
 
-## Logging
+- Run end-to-end tests:
+  ```sh
+  npm run test:e2e
+  ```
 
-Logs are stored in `app.log` with advanced filtering for sensitive data. Rotating logs are configured to prevent excessive disk usage.
+## Deployment
+
+1. Build the application:
+   ```sh
+   npm run build
+   ```
+
+2. Deploy the `dist/` directory to your web server.
 
 ## Contributing
 
