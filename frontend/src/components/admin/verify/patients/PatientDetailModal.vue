@@ -81,15 +81,6 @@
             </div>
           </div>
         </div>
-  
-        <div class="modal-footer" v-if="patient.status === 'pending'">
-          <button class="btn btn-success" @click="$emit('approve', patient.id)">
-            <i class="fas fa-check"></i> Approve Patient
-          </button>
-          <button class="btn btn-danger" @click="$emit('reject', patient.id)">
-            <i class="fas fa-times"></i> Reject Verification
-          </button>
-        </div>
       </div>
     </div>
   </template>
