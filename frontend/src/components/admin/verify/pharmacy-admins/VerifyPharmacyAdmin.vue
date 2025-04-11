@@ -697,12 +697,24 @@ export default {
         });
         
         this.admins = response.data.data.map(admin => {
+          console.log('Admin:', admin);
           let avatarData = this.defaultAdmin;
           try {
             if (admin.profile_image) {
               const avatarString = admin.profile_image.replace(/'/g, '"');
               const avatarObj = JSON.parse(avatarString);
               avatarData = "data:image/png;base64,"+avatarObj?.data;
+            }
+            if (
+              admin.documents &&
+              Array.isArray(admin.documents) &&
+              admin.documents[0]?.license &&
+              typeof admin.documents[0].license === 'string' 
+            ) {
+              const licenseString = admin.documents[0].license.replace(/'/g, '"');
+              const licenseObj = JSON.parse(licenseString);
+
+              admin.documents[0].license = licenseObj;
             }
           } catch (e) {
             console.error('Error parsing avatar:', e);
