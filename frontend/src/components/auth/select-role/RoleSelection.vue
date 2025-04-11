@@ -162,7 +162,8 @@ export default {
           specialty: '',           
           hospital_id: '',         
           degree: '',              
-          available_hours: '',     
+          available_hours: '',  
+          license_document: null,
           languages: '',           
           profile_image: null      
         },
@@ -171,7 +172,8 @@ export default {
           admin_id: '',           
           department: '',          
           qualifications: [],      
-          access_level: '',        
+          access_level: '',   
+          license_document: null,
           employment_verification: false,  
           profile_image: null ,     
           hospital_name: ''        
@@ -188,7 +190,8 @@ export default {
           logo: null,             
           operating_hours: '',     
           inventory_size: null,    
-          accreditation: '',       
+          license_document: null,
+          accreditation_document: null,          
           prescriptions_filled: null,
           pharmacists_count: null  
         },
