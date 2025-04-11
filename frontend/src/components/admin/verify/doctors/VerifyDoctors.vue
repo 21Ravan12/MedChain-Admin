@@ -849,17 +849,28 @@ export default {
         });
         
         this.doctors = response.data.data.map(doctor => {
+          console.log(doctor);
           let avatarData = this.defaultAvatar;
           try {
-            if (doctor.profile_image) {
+            if (doctor.profile_image && typeof doctor.profile_image === 'string') {
               const avatarString = doctor.profile_image.replace(/'/g, '"');
               const avatarObj = JSON.parse(avatarString);
-              avatarData = "data:image/png;base64,"+avatarObj?.data;
+              avatarData = "data:image/png;base64," + avatarObj?.data;
+            }
+            if (
+              doctor.documents &&
+              Array.isArray(doctor.documents) &&
+              doctor.documents[0]?.license &&
+              typeof doctor.documents[0].license === 'string'
+            ) {
+              const documentString = doctor.documents[0].license.replace(/'/g, '"');
+              const documentObj = JSON.parse(documentString);
+              doctor.documents[0].license = documentObj;
             }
           } catch (e) {
-            console.error('Error parsing avatar:', e);
+            console.error('Error parsing avatar or document:', e);
           }
-
+          
           return {
             id: doctor.id,
             fullName: doctor.name,
@@ -873,7 +884,7 @@ export default {
             rejectionReason: doctor.rejection_reason
           };
         });
-        
+
         this.pagination = {
           currentPage: response.data.pagination.current_page || 1,
           totalPages: response.data.pagination.pages || 1,
