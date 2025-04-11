@@ -103,6 +103,28 @@
         <button class="btn-file" @click="$refs.profileImageInput.click()">Browse</button>
       </div>
     </div>
+
+    <div class="input-row">
+    <div class="input-group">
+      <label>License Document*</label>  <!-- Added * to indicate required -->
+      <div class="file-upload-wrapper">
+        <div class="file-upload-input">
+          <i class="fas fa-file-upload"></i>
+          <span>{{ modelValue.license_document?.name || 'Select license document' }}</span>
+          <input 
+            type="file" 
+            @change="handleFileUpload('license', $event)" 
+            ref="licenseInput" 
+            style="display: none;"
+            accept="application/pdf,image/jpeg,image/png"
+            required
+          >
+        </div>
+        <button class="btn-file" @click="$refs.licenseInput.click()">Browse</button>
+      </div>
+    </div>
+  </div>
+
   </div>
 </template>
 
@@ -209,6 +231,38 @@ export default {
           }
         });
       };
+      reader.readAsDataURL(file);
+    },
+    handleFileUpload(type, event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const validTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+      const maxSize = 10 * 1024 * 1024; // 10MB
+
+      if (!validTypes.includes(file.type)) {
+        this.$emit('error', 'Invalid file type. Please upload a PDF, JPEG, or PNG file.');
+        return;
+      }
+
+      if (file.size > maxSize) {
+        this.$emit('error', 'File size exceeds 10MB limit.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Data = reader.result.split(',')[1];
+        this.$emit('update:modelValue', {
+          ...this.modelValue,
+          [`${type}_document`]: {
+            name: file.name,
+            data: base64Data,
+            type: file.type
+          }
+        });
+      };
+
       reader.readAsDataURL(file);
     }
   }
