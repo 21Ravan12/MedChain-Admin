@@ -771,12 +771,30 @@ export default {
         });
         
         this.pharmacies = response.data.data.map(pharmacy => {
+          console.log(pharmacy);
           let avatarData = this.defaultPharmacy;
           try {
             if (pharmacy.logo) {
               const logoString = pharmacy.logo.replace(/'/g, '"');
               const logoObj = JSON.parse(logoString);
               avatarData = logoObj?.data || this.defaultPharmacy;
+            }
+            if (
+              pharmacy.documents &&
+              Array.isArray(pharmacy.documents) &&
+              pharmacy.documents[0]?.license &&
+              typeof pharmacy.documents[0].license === 'string' &&
+              pharmacy.documents[0]?.accreditation &&
+              typeof pharmacy.documents[0].accreditation === 'string'
+            ) {
+              const licenseString = pharmacy.documents[0].license.replace(/'/g, '"');
+              const accreditationString = pharmacy.documents[0].accreditation.replace(/'/g, '"');
+
+              const licenseObj = JSON.parse(licenseString);
+              const accreditationObj = JSON.parse(accreditationString);
+
+              pharmacy.documents[0].license = licenseObj;
+              pharmacy.documents[0].accreditation = accreditationObj;
             }
           } catch (e) {
             console.error('Error parsing logo:', e);
