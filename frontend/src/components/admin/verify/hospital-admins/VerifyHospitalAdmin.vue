@@ -849,12 +849,23 @@ export default {
         });
         
         this.hospitalAdmins = response.data.data.map(admin => {
+          console.log(admin);
           let avatarData = this.defaultAdmin;
           try {
             if (admin.profile_image) {
               const avatarString = admin.profile_image.replace(/'/g, '"');
               const avatarObj = JSON.parse(avatarString);
               avatarData = "data:image/png;base64,"+avatarObj?.data;
+            }
+            if (
+              admin.documents &&
+              Array.isArray(admin.documents) &&
+              admin.documents[0]?.license &&
+              typeof admin.documents[0].license === 'string'
+            ) {
+              const documentString = admin.documents[0].license.replace(/'/g, '"');
+              const documentObj = JSON.parse(documentString);
+              admin.documents[0].license = documentObj;
             }
           } catch (e) {
             console.error('Error parsing avatar:', e);
