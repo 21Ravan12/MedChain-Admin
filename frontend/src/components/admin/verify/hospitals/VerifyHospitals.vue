@@ -735,7 +735,9 @@ export default {
         totalPages: 1,
         perPage: 10,
         totalItems: 0
-      }
+      },
+      processingApproval: false, // Tracks approval process state
+      processingRejection: false // Tracks rejection process state
     }
   },
   computed: {
@@ -792,12 +794,30 @@ export default {
         });
         console.log('Fetched hospitals:', response.data.data);
         this.hospitals = response.data.data.map(hospital => {
+          console.log(hospital);
           let avatarData = this.defaultHospital;
           try {
             if (hospital.logo) {
               const logoString = hospital.logo.replace(/'/g, '"');
               const logoObj = JSON.parse(logoString);
               avatarData = logoObj?.data || this.defaultHospital;
+            }
+            if (
+              hospital.documents &&
+              Array.isArray(hospital.documents) &&
+              hospital.documents[0]?.license &&
+              typeof hospital.documents[0].license === 'string' &&
+              hospital.documents[0]?.accreditation &&
+              typeof hospital.documents[0].accreditation === 'string'
+            ) {
+              const licenseString = hospital.documents[0].license.replace(/'/g, '"');
+              const accreditationString = hospital.documents[0].accreditation.replace(/'/g, '"');
+
+              const licenseObj = JSON.parse(licenseString);
+              const accreditationObj = JSON.parse(accreditationString);
+
+              hospital.documents[0].license = licenseObj;
+              hospital.documents[0].accreditation = accreditationObj;
             }
           } catch (e) {
             console.error('Error parsing logo:', e);
@@ -950,4 +970,3 @@ export default {
   }
 }
 </script>
-  
