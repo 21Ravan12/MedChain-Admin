@@ -203,6 +203,7 @@ export default {
             specialty: data?.specialty,
             hospital_id: data?.hospital_id,
             degree: data?.degree,
+            license_document: data?.license_document,
             profile_image: data?.profile_image || null,
             available_hours: data?.available_hours || '',
             languages: data?.languages || []
@@ -211,6 +212,7 @@ export default {
             hospital_id: data?.hospital_id,
             admin_id: data?.admin_id,
             department: data?.department,
+            license_document: data?.license_document,
             qualifications: data?.qualifications,
             profile_image: data?.profile_image || null,
             access_level: data?.access_level || 'basic',
@@ -238,6 +240,8 @@ export default {
             operating_hours: data?.operating_hours || '',
             inventory_size: data?.inventory_size || 0,
             accreditation: data?.accreditation || null,
+            accreditation: data?.accreditation_document || null,
+            license: data?.license_document || null,
             prescriptions_filled: data?.prescriptions_filled || 0,
             pharmacists_count: data?.pharmacists_count || 0
           }),
