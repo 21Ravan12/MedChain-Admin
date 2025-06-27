@@ -4,7 +4,7 @@
 
 MedChain is a blockchain-based healthcare platform designed to provide secure, efficient, and responsive solutions for healthcare systems. It features user-friendly interfaces, robust backend functionality, and role-based dashboards tailored to different user types.
 
-----
+---
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -214,7 +214,7 @@ frontend/
    ```
 3. Run the development server:
    ```bash
-   npm run serve
+    npm run serve
    ```
 
 ---
