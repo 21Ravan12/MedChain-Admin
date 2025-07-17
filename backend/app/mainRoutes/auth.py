@@ -910,7 +910,7 @@ def login():
             current_app.logger.warning(f"Entity not found: {user.role} with ID {user.id}")
             return jsonify({"message": "Entity not found"}), 404
         
-        if decrypt_data(entity.status_encrypted) != 'approved' or entity.verified != True:
+        if  entity.verified != True:
             current_app.logger.warning(f"Inactive account: {user.role} with ID {user.id}")
             if decrypt_data(entity.status_encrypted) != 'approved':
                 return jsonify({"message": "Account rejected description:"+decrypt_data(entity.description_encrypted)}), 403
